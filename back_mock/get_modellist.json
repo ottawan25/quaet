@@ -1,0 +1,28 @@
+{
+  "models": [
+    {
+      "api_key": "[Mockdata]OPENAI_API_KEY",
+      "api_version": null,
+      "azure_endpoint": null,
+      "deployment_name": "gpt-3.5-turbo",
+      "llm_service": "OpenAI",
+      "name": "openai-gpt-3.5"
+    },
+    {
+      "api_key": "[Mockdata]AZURE_OPENAI_API_KEY",
+      "api_version": "9999-02-01",
+      "azure_endpoint": "https://x2.openai.azure.com",
+      "deployment_name": "dp02-gpt35",
+      "llm_service": "Azure",
+      "name": "azure-gpt-3.5"
+    },
+    {
+      "api_key": "[Mockdata]AZURE_OPENAI_API_KEY_USEAST",
+      "api_version": "9999-02-01",
+      "azure_endpoint": "https://x3.openai.azure.com",
+      "deployment_name": "dp03-gpt4o",
+      "llm_service": "Azure",
+      "name": "azure-gpt-4o"
+    }
+  ]
+}

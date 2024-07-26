@@ -1,0 +1,10 @@
+{
+	"finish_reason": "stop",
+	"content": "[Mockdata] Now, let me explain Python's type annotations and dataclass.",
+	"completion_tokens": 8416,
+	"prompt_tokens": 13080,
+	"qa_id": "99990518_084815_A201",
+	"lines": 5,
+	"prompt_class": "mock data class-a",
+	"temperature": 0.5
+}

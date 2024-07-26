@@ -1,0 +1,25 @@
+{
+  "id": "chatcmpl-9aDMmqvnPTzih9ITXQuORoaQc7CYb",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "How's it going?",
+        "role": "assistant",
+        "function_call": null,
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1718418216,
+  "model": "gpt-3.5-turbo-0125",
+  "object": "chat.completion",
+  "system_fingerprint": null,
+  "usage": {
+    "completion_tokens": 7777,
+    "prompt_tokens": 2222,
+    "total_tokens": 9999
+  }
+}

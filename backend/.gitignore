@@ -1,0 +1,9 @@
+.env
+.model_env.toml
+log/
+.mypy_cache/
+__pycache__/
+qa_db/
+qa_log/
+.venv/
+.ruff_cache/

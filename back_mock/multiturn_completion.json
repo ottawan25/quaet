@@ -1,0 +1,10 @@
+{
+  "qa_id": "99990714_140000_A301",
+  "finish_reason": "stop",
+  "assistant_content": "[Mockdata] Muiti-turn completion data.",
+  "completion_tokens": 8416,
+  "prompt_tokens": 13456,
+  "lines": 5,
+  "prompt_class": "mock data test-014",
+  "temperature": 0.5
+}
