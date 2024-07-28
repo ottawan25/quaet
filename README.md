@@ -681,6 +681,10 @@ While this isn't directly related to running the program, we'll outline three ty
 
 **Format Check**
 
+We use ruff for format and style checks. These checks are based on the settings in the `"pyproject.toml"` file located in the backend directory. For more details, please see the following page.
+
+https://docs.astral.sh/ruff/configuration/
+
 ```
 $ ruff format --check pre*.py
 13 files already formatted
@@ -696,6 +700,10 @@ $
 ```
 
 **Type Check**
+
+We use mypy for type checking. Similar to ruff, it's configured using the `"pyproject.toml"` file located directly under the backend directory. For more details, check out the following page.
+
+https://mypy.readthedocs.io/en/stable/config_file.html
 
 ```
 $ mypy *.py
