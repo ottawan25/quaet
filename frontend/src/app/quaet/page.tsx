@@ -18,7 +18,7 @@ const App = () => {
   const [temperature, setTemperature] = useState<number>(
     PRE_DEFAULT_TEMPERATURE,
   );
-  const [maxTokens, setMaxTokens] = useState<number>(4000);
+  const [maxTokens, setMaxTokens] = useState<number>(2000);
   const [qaId, setQaId] = useState<string>("");
   const [resultInfo, setResultInfo] = useState<ResultInfo>({
     lines: 0,
