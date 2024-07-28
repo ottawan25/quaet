@@ -96,7 +96,7 @@ sequenceDiagram
     loop Multi-turn
     Browser->>Frontend: HandleCheckTokens
     Note left of Browser: <Tokens>
-    Frontend->>Backend: GET /count_tokens
+    Frontend->>Backend: POST /count_tokens
     Backend->>Frontend: User/Total Tokens
     Frontend->>Browser: User/Total Tokens
     Browser->>Frontend: HandleRequest (model, prompt)
@@ -476,7 +476,6 @@ $ git clone https://github.com/ottawan25/quaet.git
 First, we’ll create a private key.
 ```
 $ cd (your-dir)/quaet
-$ mkdir keys
 $ cd keys
 $ openssl genpkey -out server.key -algorithm RSA -pkeyopt rsa_kgen_bits:2048
 ```
@@ -571,15 +570,13 @@ $
 >
 > (1) Go to "Menu"-"Settings", select "Privacy and Security", "Advanced" section and click "Manage certificates".
 
-> (2) In the "Certificate" window switch to the Trusted Root Certification Authorities tab and press the "Import..." button.In the Certificate Import Wizard window that appears click the "Next >" button.
+> (2) In the "Certificate" window switch to the Trusted Root Certification Authorities tab and press the "Import..." button. In the Certificate Import Wizard window that appears click the "Next >" button.
 
 > (3) To select the file, press the "Browse..." button.
 
 > (4) Find the saved certificate file on your hard disk and click the "Open" button.
 
 > (5) Then click the "Next >" button.
-
-> (6) Keep in mind that the certificate storage opened by default should be the same as the location where you need to install the root certificate.
 
 ## :wrench: Step-2: Setup Backend
 
@@ -787,7 +784,7 @@ $ mkdir qa_log
 This matches the directory name specified in PRE_DB_URI.
 
 ```
-(.venv)$ mkdir qa_db
+$ mkdir qa_db
 ```
 
 ### (6) Create Evaluation Table
@@ -971,8 +968,8 @@ NEXT_PUBLIC_QAE_CERTIFICATE=../keys/server.crt
 NEXT_PUBLIC_NETWORK_INTERFACE="wlp0*"
 
 # Backend API Server URL
-#NEXT_PUBLIC_API_SERVER_URL=https://192.168.10.104:5050
-NEXT_PUBLIC_API_SERVER_URL=https://192.168.10.104:3030
+#NEXT_PUBLIC_API_SERVER_URL=https://(your-ip-address):5050
+NEXT_PUBLIC_API_SERVER_URL=https://(your-ip-address):3030
 
 # Default System Content
 NEXT_PUBLIC_SYSTEM_CONTENT="You are a helpful assistant."
@@ -1020,7 +1017,9 @@ This component reads the application version information from package.json and d
 The front-end server environment setup is now complete. Next, verify that the server is running.
 
 **NEXT_PUBLIC_SYSTEM_CONTENT_ROWS**
+
 **NEXT_PUBLIC_USER_CONTENT_ROWS**
+
 **NEXT_PUBLIC_ASSISTANT_CONTENT_ROWS**
 
 Set the default number of lines shown for the content message text field on the screen. You can also change the number of lines dynamically by using the shortcut keys below after activating each field.
@@ -1035,6 +1034,7 @@ Set the default number of lines shown for the content message text field on the 
 Similar to the front end (Python code), we perform three types of static checks.
 
 **Format Check**
+
 Use Prettier to check your code. The main rules are defined in the ".prettierrc" file located in the root of the frontend directory. For more details, check the URL below.
 
 https://prettier.io/docs/en/options.html
@@ -1048,6 +1048,7 @@ $
 ```
 
 **Style Check**
+
 Currently, we are using the ".eslintrc.json" file located in the frontend directory for linting. If you know of any better methods or additional rules we should include, please let us know. Also, refer to the following sites for more information.
 
 https://nextjs.org/docs/pages/building-your-application/configuring/eslint
