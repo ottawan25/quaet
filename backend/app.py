@@ -1,7 +1,6 @@
 import json
 import os
 import traceback
-from typing import Optional
 
 from dotenv import load_dotenv
 from flask import Flask, Response, jsonify, make_response, request
@@ -20,12 +19,6 @@ app = Flask(__name__)
 CORS(app)
 
 load_dotenv()
-
-key = os.getenv("PRE_PRIVATE_KEY")
-cert = os.getenv("PRE_CERTIFICATE")
-host = os.getenv("FLASK_RUN_HOST")
-port_str: Optional[str] = os.getenv("FLASK_RUN_PORT")
-port: Optional[int] = int(port_str) if port_str is not None else None
 
 log_dir = os.environ.get("PRE_LOG_DIR")
 if log_dir is None:
@@ -156,4 +149,4 @@ def post_add_evaluation() -> Response:
 
 
 if __name__ == ("__main__"):
-    app.run(debug=True, host=host, port=port, ssl_context=(cert, key))
+    app.run()

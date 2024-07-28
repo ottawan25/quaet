@@ -1,0 +1,16 @@
+{
+  "user_id": "A104",
+  "qa_id": "20240727_153838_01_A104",
+  "system_content": "You are a helpful assistant.",
+  "user_content": "Tell me about Python's type annotation shortly.",
+  "add_chat_data": [
+    {
+      "assistant_content": "Type annotations in Python allow you to specify the data types of variables, function parameters, and return values. They are optional but can help improve code readability and catch errors early. Python's type hinting system was introduced in PEP 484 and has since been enhanced in later versions of the language.",
+      "user_content": "Show me sample code."
+    }
+  ],
+  "selected_model": "openai-gpt-3.5",
+  "prompt_class": "case01",
+  "temperature": 0.2,
+  "max_tokens": 4000
+}

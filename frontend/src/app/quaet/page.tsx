@@ -16,9 +16,9 @@ const App = () => {
   const [selectedModel, setSelectedModel] = useState("");
   const [promptClass, setPromptClass] = useState<string>("");
   const [temperature, setTemperature] = useState<number>(
-    PRE_DEFAULT_TEMPERATURE
+    PRE_DEFAULT_TEMPERATURE,
   );
-  const [maxTokens, setMaxTokens] = useState<number>(1000);
+  const [maxTokens, setMaxTokens] = useState<number>(4000);
   const [qaId, setQaId] = useState<string>("");
   const [resultInfo, setResultInfo] = useState<ResultInfo>({
     lines: 0,
@@ -39,17 +39,17 @@ const App = () => {
     add_chat_data: [],
   });
   const [systemContent, setSystemContent] = useState<string>(
-    process.env.NEXT_PUBLIC_SYSTEM_CONTENT || DEFAULT_SYSTEM_PROMPT
+    process.env.NEXT_PUBLIC_SYSTEM_CONTENT || DEFAULT_SYSTEM_PROMPT,
   );
   const [model, setModel] = useState<string>("");
   const [systemContentRows, setSystemContentRows] = useState<number>(
-    Number(process.env.NEXT_PUBLIC_SYSTEM_CONTENT_ROWS)
+    Number(process.env.NEXT_PUBLIC_SYSTEM_CONTENT_ROWS),
   );
   const [userContentRows, setUserContentRows] = useState<number>(
-    Number(process.env.NEXT_PUBLIC_USER_CONTENT_ROWS)
+    Number(process.env.NEXT_PUBLIC_USER_CONTENT_ROWS),
   );
   const [assistantContentRows, setAssistantContentRows] = useState<number>(
-    Number(process.env.NEXT_PUBLIC_ASSISTANT_CONTENT_ROWS)
+    Number(process.env.NEXT_PUBLIC_ASSISTANT_CONTENT_ROWS),
   );
 
   // jsx
@@ -58,7 +58,7 @@ const App = () => {
       <Box sx={{ px: 3, pt: 1 }}>
         <NavBar userId={userId} setUserId={setUserId} />
         <Grid container spacing={0}>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <LeftSideBar
               selectedModel={selectedModel}
               promptClass={promptClass}
@@ -81,7 +81,7 @@ const App = () => {
               setChatdata={setChatdata}
             />
           </Grid>
-          <Grid item xs={7}>
+          <Grid item xs={6}>
             <Center
               selectedModel={selectedModel}
               promptClass={promptClass}

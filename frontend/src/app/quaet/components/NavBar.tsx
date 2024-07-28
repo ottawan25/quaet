@@ -34,7 +34,7 @@ const NavBar: React.FC<NavBarProps> = ({ userId, setUserId }) => {
     }
     getUserID();
   }, [setUserId]);
-  
+
   // jsx
   return (
     <>

@@ -126,7 +126,7 @@ const LeftSideBar: React.FC<LeftSideBarProps> = ({
 
   const handleTemperatureChange = (
     event: Event,
-    newValue: number | number[]
+    newValue: number | number[],
   ) => {
     if (typeof newValue === "number") {
       setTemperature(newValue);

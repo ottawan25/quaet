@@ -1,8 +1,0 @@
-{
-  "system_content": "[Mock Data]You are a helpful assistant.",
-  "user_content": "[Mock Data]Please tell me briefly about Python's dataclass.",
-  "temperature": 0.9,
-  "prompt_class": "test case #003",
-  "user_id": "A555",
-  "selected_model": "openai-gpt-3.5"
-}

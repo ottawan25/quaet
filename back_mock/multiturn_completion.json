@@ -1,10 +1,11 @@
 {
-  "qa_id": "99990714_140000_A301",
+  "qa_id": "20240728_085159_01_A104",
   "finish_reason": "stop",
-  "assistant_content": "[Mockdata] Muiti-turn completion data.",
-  "completion_tokens": 8416,
-  "prompt_tokens": 13456,
-  "lines": 5,
-  "prompt_class": "mock data test-014",
-  "temperature": 0.5
+  "assistant_content": "[Mockdata] Hello! How can I assist you today?",
+  "completion_tokens": 9,
+  "prompt_tokens": 20,
+  "lines": 1,
+  "prompt_class": "case01",
+  "temperature": 0.2,
+  "model": "gpt-3.5-turbo-0125"
 }

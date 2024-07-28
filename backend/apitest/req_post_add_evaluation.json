@@ -1,10 +1,12 @@
 {
-  "qa_id": "99990599_160220_A123",
-  "lines": 5,
-  "prompt_class": "TestCase-AAA",
-  "temperature": 0.8,
-  "completion_tokens": 7777,
-  "prompt_tokens": 8888,
+  "qa_id": "20240727_153838_02_A104",
+  "lines": 1,
+  "prompt_class": "case01",
+  "temperature": 0.2,
+  "completion_tokens": 85,
+  "prompt_tokens": 99,
   "rating": 2.5,
-  "comment": "[Mock Data]Good Prompt"
+  "comment": "[Mock Data] nice",
+  "deployment_name": "openai-gpt-3.5",
+  "model": "gpt-3.5-turbo-0125"
 }
