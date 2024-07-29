@@ -71,9 +71,9 @@ This project is a Question/Answering application we developed to learn prompt en
 
 # :scroll: Features
 
-- Saving questions and answers: These are saved in a toml file with the date and time as the key. Some elements of the response data from OpenAI are also saved.
-- You can select the model, specify temperature, max_tokens and prompt class. The prompt class can be freely specified by the user, such as the verification viewpoint or test case number.
-- Saving operation logs: The flask logger is used to save backend operation and event logs, debug information, etc.
+- **Saving questions and answers:** These are saved in a toml file with the date and time as the key. Some elements of the response data from OpenAI are also saved.
+- **Specifying Using Model and Prompt Class:** You can set the model and prompt class, along with parameters like temperature and max_tokens. Users can freely configure the prompt class with basic information needed for later analysis, such as verification criteria, category, or test case number.
+- **Evaluate questions:** Assess whether the answer you received met your expectations, and save the evaluation results in the database along with the key and prompt class mentioned above. The saved data can then be used for future analysis to help improve prompt quality.
 
 # :ladder: Sequence
 
