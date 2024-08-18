@@ -22,6 +22,7 @@ interface CenterProps {
   systemContentRows: number;
   userContentRows: number;
   assistantContentRows: number;
+  isSelectedModel: boolean;
   setQaId: (newValue: string) => void;
   setResultInfo: (newValue: ResultInfo) => void;
   setContents: React.Dispatch<React.SetStateAction<ContentData[]>>;
@@ -51,6 +52,7 @@ const Center: React.FC<CenterProps> = ({
   systemContentRows,
   userContentRows,
   assistantContentRows,
+  isSelectedModel,
   setQaId,
   setResultInfo,
   setContents,
@@ -79,6 +81,7 @@ const Center: React.FC<CenterProps> = ({
         chatdata={chatdata}
         userTokens={userTokens}
         totalTokens={totalTokens}
+        isSelectedModel={isSelectedModel}
         setUserTokens={setUserTokens}
         setTotalTokens={setTotalTokens}
       />

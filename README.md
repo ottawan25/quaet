@@ -8,10 +8,15 @@ This project is a Question/Answering application we developed to learn prompt en
 
 ![Demo](./images/video_020_01.gif)
 
+## :door: Available GenAI
+- OpenAI (Azure OpenAI)
+- Gemini API (GoogleAI, VertexAI)
+
 # :book: Table of Contents
 
 - [:tanabata\_tree: Overview](#tanabata_tree-overview)
   - [:tada: Demo](#tada-demo)
+  - [:door: Available GenAI](#door-available-genai)
 - [:book: Table of Contents](#book-table-of-contents)
 - [:scroll: Features](#scroll-features)
 - [:ladder: Sequence](#ladder-sequence)
@@ -26,17 +31,18 @@ This project is a Question/Answering application we developed to learn prompt en
   - [:wrench: Step-2: Setup Backend](#wrench-step-2-setup-backend)
     - [(1) Python Packages](#1-python-packages)
     - [(2) Setting Environment Variables](#2-setting-environment-variables)
-    - [(3) Static Check](#3-static-check)
-    - [(4) Model Definition](#4-model-definition)
-    - [(5) Create Directories](#5-create-directories)
-    - [(6) Create Evaluation Table](#6-create-evaluation-table)
+    - [(3) Static Testing](#3-static-testing)
+    - [(4) Dynamic Testing](#4-dynamic-testing)
+    - [(5) Model Definition](#5-model-definition)
+    - [(6) Create Directories](#6-create-directories)
+    - [(7) Create Evaluation Table](#7-create-evaluation-table)
   - [:running\_man: Step-3: Run Backend](#running_man-step-3-run-backend)
     - [(1) Run a Backend Application](#1-run-a-backend-application)
     - [(2) Send Some Requests](#2-send-some-requests)
   - [:hammer: Step-4: Setup Frontend](#hammer-step-4-setup-frontend)
     - [(1) Node Packages](#1-node-packages)
     - [(2) Setting Environment Variables](#2-setting-environment-variables-1)
-    - [(3) Static Check](#3-static-check-1)
+    - [(3) Static Testing](#3-static-testing-1)
   - [:running\_woman: Step-5: Run Frontend](#running_woman-step-5-run-frontend)
     - [(1) Run a Frontend Application](#1-run-a-frontend-application)
     - [(2) Open Browser](#2-open-browser)
@@ -44,7 +50,7 @@ This project is a Question/Answering application we developed to learn prompt en
     - [(4) User Interface Instructions](#4-user-interface-instructions)
   - [:sparkles: Step-6: End-to-end Communications](#sparkles-step-6-end-to-end-communications)
     - [(1) Frontend to Backend with Mock APIs](#1-frontend-to-backend-with-mock-apis)
-    - [(2) Communicate OpenAI](#2-communicate-openai)
+    - [(2) Communicate GenAI](#2-communicate-genai)
 - [:musical\_note: How To Use](#musical_note-how-to-use)
   - [:speech\_balloon: Question/Answering](#speech_balloon-questionanswering)
     - [(1) Get Modellist](#1-get-modellist)
@@ -71,7 +77,7 @@ This project is a Question/Answering application we developed to learn prompt en
 
 # :scroll: Features
 
-- **Saving questions and answers:** These are saved in a toml file with the date and time as the key. Some elements of the response data from OpenAI are also saved.
+- **Saving questions and answers:** These are saved in a toml file with the date and time as the key. Some elements of the response data from GenerativeAI are also saved.
 - **Specifying Using Model and Prompt Class:** You can set the model and prompt class, along with parameters like temperature and max_tokens. Users can freely configure the prompt class with basic information needed for later analysis, such as verification criteria, category, or test case number.
 - **Evaluate questions:** Assess whether the answer you received met your expectations, and save the evaluation results in the database along with the key and prompt class mentioned above. The saved data can then be used for future analysis to help improve prompt quality.
 
@@ -83,7 +89,7 @@ sequenceDiagram
     participant Frontend
     participant Backend
     participant Database
-    participant OpenAI
+    participant GenerativeAI
     Browser->>Frontend: Get UserID
     Note right of Frontend: Next.js Route Handlers
     Frontend->>Browser: UserID (IPv4(host-addr))
@@ -102,8 +108,8 @@ sequenceDiagram
     Browser->>Frontend: HandleRequest (model, prompt)
     Note left of Browser: <Question(Completion)>
     Frontend->>Backend: POST /multiturn_completion
-    Backend->>OpenAI: chat.completion.create()
-    OpenAI->>Backend: response
+    Backend->>GenerativeAI: chat.completion.create()
+    GenerativeAI->>Backend: response
     Note over Backend: save qa_log
     Backend->>Frontend: response_data
     Frontend->>Browser: Answer (result)
@@ -599,7 +605,7 @@ To run the backend server, you need to set some environment variables. Here is a
 
 ```
 # --- for flask ---
-FLASK_APP="app.py"
+FLASK_APP="api/app.py"
 FLASK_DEBUG=1
 FLASK_RUN_HOST="0.0.0.0"
 FLASK_RUN_PORT=5050
@@ -611,13 +617,16 @@ FLASK_RUN_CERT="../keys/server.crt"
 OPENAI_API_KEY="sk-xxxxx"
 #AZURE_OPENAI_API_KEY="xxxxx"
 
+# GoogleAI API Key
+GOOGLE_API_KEY="xxxxx"
+
 # Available Model Definitions
 PRE_DEF_MODEL=".model_env.toml"
 
-# OpenAI API Runmode
+# GenAI Runmode
 #PRE_RUNMODE="Mock"		# Runmode: "Mock" or comment out
 
-# Mockdata for OpenAI API Response 
+# Mockdata for GenAI(OpenAI) API Response 
 PRE_MOCKDATA_FILE="./pre_mockdata.json"
 
 # --- for output ---
@@ -645,6 +654,8 @@ Environment variables for starting Flask. We'll skip the details here.
 
 **OPENAI_API_KEY (AZURE_OPENAI_API_KEY)**
 
+**GOOGLE_API_KEY**
+
 As the name suggests.
 
 https://platform.openai.com/docs/quickstart
@@ -655,7 +666,7 @@ Specifies the file name that defines the available models.
 
 **PRE_RUN_MODE**
 
-If you set the string "Mock", a mock version of the OpenAI API will be used (no requests will be sent to OpenAI).
+If you set the string "Mock", a mock version of the OpenAI API will be used (no requests will be sent to GenAI).
 
 **PRE_MOCKDATA_FILE**
 
@@ -667,7 +678,7 @@ Specifies the directory where event logs and debug logs will be stored when the 
 
 **PRE_QA_LOG_DIR**
 
-When making a request with the OpenAI API, the parameter values, request details, and some elements of the response object are saved in a TOML file. This variable specifies where the file is stored.
+When making a request with the GenAI API, the parameter values, request details, and some elements of the response object are saved in a TOML file. This variable specifies where the file is stored.
 
 **PRE_DB_URI**
 
@@ -675,7 +686,7 @@ The QA information, stored as a TOML file in the specified directory, is recorde
 
 </details>
 
-### (3) Static Check
+### (3) Static Testing
 
 While this isn't directly related to running the program, we'll outline three types of static check procedures to help organize the methods for statically checking application programs. These check procedures are applicable not only to the backend (Python code) but also to the frontend (TypeScript code), which we will discuss later.
 
@@ -686,15 +697,15 @@ We use ruff for format and style checks. These checks are based on the settings 
 https://docs.astral.sh/ruff/configuration/
 
 ```
-$ ruff format --check pre*.py
-13 files already formatted
+$ ruff format --check api/*.py
+15 files already formatted
 $
 ```
 
 **Style Check**
 
 ```
-$ ruff check pre*.py
+$ ruff check api/*.py
 All checks passed!
 $
 ```
@@ -706,13 +717,68 @@ We use mypy for type checking. Similar to ruff, it's configured using the `"pypr
 https://mypy.readthedocs.io/en/stable/config_file.html
 
 ```
-$ mypy *.py
-Success: no issues found in 14 source files
+$ mypy api/*.py
+Success: no issues found in 15 source files
 $
 
 ```
 
-### (4) Model Definition
+### (4) Dynamic Testing
+
+This is an example of dynamic testing with pytest. It was set up mainly for regression testing when adding GoogleAI support after OpenAI. Keep in mind, it's not meant to fully cover everything.
+
+```
+$ pytest -v
+============================= test session starts ==============================
+platform linux -- Python 3.12.4, pytest-8.3.2, pluggy-1.5.0 -- (your-home)/.pyenv/versions/3.12.4/bin/python3.12
+cachedir: .pytest_cache
+rootdir: (your-dir)/quaet/backend
+configfile: pyproject.toml
+plugins: anyio-4.4.0
+collected 5 items                                                              
+
+tests/test_add_evaluation.py::test_add_evaluation PASSED                 [ 20%]
+tests/test_count_tokens.py::test_count_tokens PASSED                     [ 40%]
+tests/test_get_modellist.py::test_get_modellist PASSED                   [ 60%]
+tests/test_hello.py::test_hello PASSED                                   [ 80%]
+tests/test_multiturn_completion.py::test_multiturn_completion PASSED     [100%]
+
+============================== 5 passed in 2.23s ===============================
+$ 
+
+```
+
+Just to note, these tests weren’t specifically designed for coverage, but here are the coverage results. As you can see, the coverage for the three modules—pre_chat_completion.py, pre_count_tokens.py, and pre_multiturn_completion.py—is pretty low. pre_chat_completion.py was used in version 0.1.0 but hasn’t been used since version 0.2.0. The tests were written before GeminiAPI support was added in version 0.3.0. After adding GeminiAPI support, the two main modules that were modified were pre_count_tokens.py and pre_multiturn_completion.py, and since we didn’t create tests for these changes, this is clearly reflected in the coverage rates.
+
+```
+$ coverage report -m
+Name                                 Stmts   Miss  Cover   Missing
+------------------------------------------------------------------
+api/app.py                               4      1    75%   6
+api/app_factory.py                      86     19    78%   26, 31-43, 81-96
+api/pre_add_evaluation.py               68     17    75%   53, 61, 65, 87-101
+api/pre_chat_completion.py             110     72    35%   54-56, 62-185
+api/pre_count_tokens.py                 97     62    36%   7-8, 13-14, 21-22, 27-28, 33-34, 42, 55-64, 73, 75, 82-156
+api/pre_evaluation.py                   28      0   100%
+api/pre_get_modellist.py                27      5    81%   34-38
+api/pre_get_session.py                   7      0   100%
+api/pre_logger.py                       28      0   100%
+api/pre_model.py                        45      6    87%   21, 23, 34, 39, 50, 59
+api/pre_multiturn_completion.py        189     97    49%   13-14, 22, 25, 30-31, 43-44, 56-57, 62-63, 68-69, 77, 79-80, 85, 92-97, 101-105, 109-111, 119, 137, 141-146, 148, 153, 156-167, 177-179, 207, 217, 222, 229-329
+api/pre_openai_mock.py                  47      2    96%   21-22
+api/pre_response_errordata.py            5      0   100%
+tests/conftest.py                       12      0   100%
+tests/test_add_evaluation.py            31      4    87%   6-7, 12, 19
+tests/test_count_tokens.py              19      0   100%
+tests/test_get_modellist.py             12      0   100%
+tests/test_hello.py                      4      0   100%
+tests/test_multiturn_completion.py      19      0   100%
+------------------------------------------------------------------
+TOTAL                                  838    285    66%
+$ 
+```
+
+### (5) Model Definition
 
 Specify the connection details for the model you want to use. Write to the file specified by the PRE_DEF_MODEL environment variable.
 
@@ -732,6 +798,12 @@ deployment_name = "gpt-3.5-turbo"
 api_key = "OPENAI_API_KEY"
 
 [[model]]
+name = "google-gemini-1.5-flash"
+llm_service = "GoogleAI"
+deployment_name = "gemini-1.5-flash"
+api_key = "GOOGLE_API_KEY"
+
+[[model]]
 name = "azure-gpt-3.5"
 llm_service = "Azure"
 deployment_name = "dp02-gpt35"
@@ -747,15 +819,15 @@ This key represents the connection information for the model, and users can free
 
 **llm_service**
 
-Currently, only "OpenAI" and "Azure" can be specified.
+Currently, only "OpenAI", "GoogleAI" and "Azure" can be specified.
 
 **deployment_name**
 
-The name of the model used when sending requests to the OpenAI.
+The name of the model used when sending requests to the GenAI.
 
 **api_key**
 
-Rather than specifying the API_KEY directly, use the environment variable name defined in your .env file, such as OPENAI_API_KEY or AZURE_OPENAI_API_KEY.
+Rather than specifying the API_KEY directly, use the environment variable name defined in your .env file, such as OPENAI_API_KEY, GOOGLE_API_KEY or AZURE_OPENAI_API_KEY.
 
 **api_version**
 
@@ -767,7 +839,7 @@ Rather than specifying the API_KEY directly, use the environment variable name d
 
 </details>
 
-### (5) Create Directories
+### (6) Create Directories
 
 Next, create the three directories needed to start the backend server. Create it in the (your-dir)/quaet/backend directory.
 
@@ -795,7 +867,7 @@ This matches the directory name specified in PRE_DB_URI.
 $ mkdir qa_db
 ```
 
-### (6) Create Evaluation Table
+### (7) Create Evaluation Table
 
 Run this command. Then, use the sqlite3 command to see if the table was created.
 
@@ -837,7 +909,7 @@ The IP address displayed is your local machine's actual IP address.
 
 ```
 $ flask run
- * Serving Flask app 'app.py'
+ * Serving Flask app 'api/app.py'
  * Debug mode: on
 WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
  * Running on all addresses (0.0.0.0)
@@ -870,7 +942,7 @@ Next, send a POST request with the data from "apitest/req_post_count_tokens.json
 
 - URL: https://(your-ip-address):5050/count_tokens
 - Method: POST
-- Json Data: see below (apitest/req_post_count_tokens.json)
+- Json Data: see below (tests/data/req_post_count_tokens.json)
 ```json
 {
   "system_content": "You are a helpful assistant.",
@@ -891,7 +963,7 @@ Next, send a POST request with the data from "apitest/req_post_multiturn_complet
 
 - URL: https://(your-ip-address):5050/multiturn_completion
 - Method: POST
-- Json Data: see below (apitest/req_post_multiturn_completion.json)
+- Json Data: see below (tests/data/req_post_multiturn_completion.json)
 
 ```json
 {
@@ -923,7 +995,7 @@ And then, send a request to the add_evaluation endpoint using the POST method. U
 
 - URL: https://(your-ip-address):5050/add_evaluation
 - Method: POST
-- Json Data: see below (apitest/req_post_add_evaluation.json)
+- Json Data: see below (tests/data/req_post_add_evaluation.json)
 
 ```json
 {
@@ -1037,7 +1109,7 @@ Set the default number of lines shown for the content message text field on the 
 
 </details>
 
-### (3) Static Check
+### (3) Static Testing
 
 Similar to the front end (Python code), we perform three types of static checks.
 
@@ -1371,14 +1443,14 @@ $
 > The directory name qa_log corresponds to the name specified by the environment variable PRE_QA_LOG_DIR.
 > The response data is generated based on mock data (pre_mockdata.json).
 
-### (2) Communicate OpenAI
+### (2) Communicate GenAI
 
 After stopping the backend you started earlier, modify the '.env' file.
 
 - Verify that the correct value is set for OPENAI_API_KEY (AZURE_OPENAI_API_KEY).
 - Comment out PRE_RUNMODE.
 ```
-# OpenAI API Runmode
+# GenAI API Runmode
 #PRE_RUNMODE="Mock"		# Runmode: "Mock" or comment out
 ```
 
@@ -1386,7 +1458,7 @@ After restarting the frontend and the browser, repeat the previous steps and cli
 
 ![ask_question](./images/s06_02_send_request.png)
 
-To verify if the result indeed comes from OpenAI, let's inspect the logs. You should find 'app.log' created in the log directory. If the log at that timestamp contains 'OpenAI API Call' and includes the following entry, it confirms receipt of the response message from OpenAI. The log directory is specified by the environment variable PRE_LOG_DIR.
+To verify if the result indeed comes from GenAI, let's inspect the logs. You should find 'app.log' created in the log directory. If the log at that timestamp contains 'GenAI API Call' and includes the following entry, it confirms receipt of the response message from GenAI. The log directory is specified by the environment variable PRE_LOG_DIR.
 
 ```
 $ cat app.log
@@ -1480,6 +1552,8 @@ Set the temperature.
 For more information, please refer to the following document:
 
 https://platform.openai.com/docs/api-reference/chat/create
+
+https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters
 
 > [!IMPORTANT]
 > According to the documentation above, it states that the temperature can be set between 0 and 2. However, I recall it previously being limited to 0 to 1. Additionally, an example of a "Higher Value" is given as 0.8, which is below 1. In this project, I aim for a more deterministic response. Due to these considerations, I've set the temperature range in this application to 0 to 1, with the initial value set to 0.2.

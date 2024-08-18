@@ -58,6 +58,7 @@ interface LeftSideBarProps {
   setComment: (newValue: string) => void;
   setResultInfo: (newValue: ResultInfo) => void;
   setChatdata: React.Dispatch<React.SetStateAction<ChatCompletionData>>;
+  setIsSelectedModel: (newValue: boolean) => void;
 }
 
 // LeftSideBar Component
@@ -81,6 +82,7 @@ const LeftSideBar: React.FC<LeftSideBarProps> = ({
   setComment,
   setResultInfo,
   setChatdata,
+  setIsSelectedModel,
 }) => {
   // hooks
   const [getModellistLoading, setGetModellistLoading] =
@@ -102,6 +104,7 @@ const LeftSideBar: React.FC<LeftSideBarProps> = ({
       if ("models" in response.data) {
         setModels(response.data.models);
         setSelectedModel(response.data.models[0].name);
+        setIsSelectedModel(true);
       } else {
         setGetModellistError("Invalid response data");
       }

@@ -1,6 +1,6 @@
 {
   "name": "qae_app",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "dev": "node ./server.mjs",

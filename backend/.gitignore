@@ -7,3 +7,4 @@ qa_db/
 qa_log/
 .venv/
 .ruff_cache/
+.coverage

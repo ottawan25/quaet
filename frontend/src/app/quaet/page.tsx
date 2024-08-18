@@ -51,6 +51,7 @@ const App = () => {
   const [assistantContentRows, setAssistantContentRows] = useState<number>(
     Number(process.env.NEXT_PUBLIC_ASSISTANT_CONTENT_ROWS),
   );
+  const [isSelectedModel, setIsSelectedModel] = useState<boolean>(false);
 
   // jsx
   return (
@@ -79,6 +80,7 @@ const App = () => {
               setComment={setComment}
               setResultInfo={setResultInfo}
               setChatdata={setChatdata}
+              setIsSelectedModel={setIsSelectedModel}
             />
           </Grid>
           <Grid item xs={6}>
@@ -97,6 +99,7 @@ const App = () => {
               systemContentRows={systemContentRows}
               userContentRows={userContentRows}
               assistantContentRows={assistantContentRows}
+              isSelectedModel={isSelectedModel}
               setQaId={setQaId}
               setResultInfo={setResultInfo}
               setContents={setContents}

@@ -28,6 +28,7 @@ interface HeaderContentProps {
   chatdata: ChatCompletionData;
   userTokens: number;
   totalTokens: number;
+  isSelectedModel: boolean;
   setUserTokens: (newValue: number) => void;
   setTotalTokens: (newValue: number) => void;
 }
@@ -39,6 +40,7 @@ const HeaderContent: React.FC<HeaderContentProps> = ({
   chatdata,
   userTokens,
   totalTokens,
+  isSelectedModel,
   setUserTokens,
   setTotalTokens,
 }) => {
@@ -94,7 +96,12 @@ const HeaderContent: React.FC<HeaderContentProps> = ({
         justifyContent="space-around"
         sx={{ pt: 2 }}
       >
-        <Button onClick={handleCheckTokens}>Tokens</Button>
+        <Button
+          onClick={handleCheckTokens}
+          disabled={isSelectedModel === false}
+        >
+          Tokens
+        </Button>
         <Typography>User: </Typography>
         <Typography>{userTokens.toLocaleString()}</Typography>
         <Typography>Total: </Typography>
