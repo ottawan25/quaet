@@ -32,13 +32,13 @@ This project is a Question/Answering application we developed to learn prompt en
     - [(1) Python Packages](#1-python-packages)
     - [(2) Setting Environment Variables](#2-setting-environment-variables)
     - [(3) Static Testing](#3-static-testing)
-    - [(4) Dynamic Testing](#4-dynamic-testing)
-    - [(5) Model Definition](#5-model-definition)
-    - [(6) Create Directories](#6-create-directories)
-    - [(7) Create Evaluation Table](#7-create-evaluation-table)
+    - [(4) Model Definition](#4-model-definition)
+    - [(5) Create Directories](#5-create-directories)
+    - [(6) Create Evaluation Table](#6-create-evaluation-table)
   - [:running\_man: Step-3: Run Backend](#running_man-step-3-run-backend)
     - [(1) Run a Backend Application](#1-run-a-backend-application)
     - [(2) Send Some Requests](#2-send-some-requests)
+    - [(3) Dynamic Testing](#3-dynamic-testing)
   - [:hammer: Step-4: Setup Frontend](#hammer-step-4-setup-frontend)
     - [(1) Node Packages](#1-node-packages)
     - [(2) Setting Environment Variables](#2-setting-environment-variables-1)
@@ -620,6 +620,11 @@ OPENAI_API_KEY="sk-xxxxx"
 # GoogleAI API Key
 GOOGLE_API_KEY="xxxxx"
 
+# VertexAI API Key, ProjectID, Location
+GOOGLE_APPLICATION_CREDENTIALS="xxxxx"
+PRE_VERTEXAI_PROJECT_ID="xxxxx"
+PRE_VERTEXAI_REGION="xxxxx"
+
 # Available Model Definitions
 PRE_DEF_MODEL=".model_env.toml"
 
@@ -723,62 +728,7 @@ $
 
 ```
 
-### (4) Dynamic Testing
-
-This is an example of dynamic testing with pytest. It was set up mainly for regression testing when adding GoogleAI support after OpenAI. Keep in mind, it's not meant to fully cover everything.
-
-```
-$ pytest -v
-============================= test session starts ==============================
-platform linux -- Python 3.12.4, pytest-8.3.2, pluggy-1.5.0 -- (your-home)/.pyenv/versions/3.12.4/bin/python3.12
-cachedir: .pytest_cache
-rootdir: (your-dir)/quaet/backend
-configfile: pyproject.toml
-plugins: anyio-4.4.0
-collected 5 items                                                              
-
-tests/test_add_evaluation.py::test_add_evaluation PASSED                 [ 20%]
-tests/test_count_tokens.py::test_count_tokens PASSED                     [ 40%]
-tests/test_get_modellist.py::test_get_modellist PASSED                   [ 60%]
-tests/test_hello.py::test_hello PASSED                                   [ 80%]
-tests/test_multiturn_completion.py::test_multiturn_completion PASSED     [100%]
-
-============================== 5 passed in 2.23s ===============================
-$ 
-
-```
-
-Just to note, these tests weren’t specifically designed for coverage, but here are the coverage results. As you can see, the coverage for the three modules—pre_chat_completion.py, pre_count_tokens.py, and pre_multiturn_completion.py—is pretty low. pre_chat_completion.py was used in version 0.1.0 but hasn’t been used since version 0.2.0. The tests were written before GeminiAPI support was added in version 0.3.0. After adding GeminiAPI support, the two main modules that were modified were pre_count_tokens.py and pre_multiturn_completion.py, and since we didn’t create tests for these changes, this is clearly reflected in the coverage rates.
-
-```
-$ coverage report -m
-Name                                 Stmts   Miss  Cover   Missing
-------------------------------------------------------------------
-api/app.py                               4      1    75%   6
-api/app_factory.py                      86     19    78%   26, 31-43, 81-96
-api/pre_add_evaluation.py               68     17    75%   53, 61, 65, 87-101
-api/pre_chat_completion.py             110     72    35%   54-56, 62-185
-api/pre_count_tokens.py                 97     62    36%   7-8, 13-14, 21-22, 27-28, 33-34, 42, 55-64, 73, 75, 82-156
-api/pre_evaluation.py                   28      0   100%
-api/pre_get_modellist.py                27      5    81%   34-38
-api/pre_get_session.py                   7      0   100%
-api/pre_logger.py                       28      0   100%
-api/pre_model.py                        45      6    87%   21, 23, 34, 39, 50, 59
-api/pre_multiturn_completion.py        189     97    49%   13-14, 22, 25, 30-31, 43-44, 56-57, 62-63, 68-69, 77, 79-80, 85, 92-97, 101-105, 109-111, 119, 137, 141-146, 148, 153, 156-167, 177-179, 207, 217, 222, 229-329
-api/pre_openai_mock.py                  47      2    96%   21-22
-api/pre_response_errordata.py            5      0   100%
-tests/conftest.py                       12      0   100%
-tests/test_add_evaluation.py            31      4    87%   6-7, 12, 19
-tests/test_count_tokens.py              19      0   100%
-tests/test_get_modellist.py             12      0   100%
-tests/test_hello.py                      4      0   100%
-tests/test_multiturn_completion.py      19      0   100%
-------------------------------------------------------------------
-TOTAL                                  838    285    66%
-$ 
-```
-
-### (5) Model Definition
+### (4) Model Definition
 
 Specify the connection details for the model you want to use. Write to the file specified by the PRE_DEF_MODEL environment variable.
 
@@ -811,6 +761,12 @@ api_key = "AZURE_OPENAI_API_KEY"
 api_version = "2024-02-01"
 azure_endpoint = "https://xxx.openai.azure.com"
 
+[[model]]
+name = "vertexai-gemini-1.5-flash"
+llm_service = "VertexAI"
+deployment_name = "gemini-1.5-flash"
+api_key = "GOOGLE_APPLICATION_CREDENTIALS"
+
 ```
 
 **name**
@@ -839,7 +795,7 @@ Rather than specifying the API_KEY directly, use the environment variable name d
 
 </details>
 
-### (6) Create Directories
+### (5) Create Directories
 
 Next, create the three directories needed to start the backend server. Create it in the (your-dir)/quaet/backend directory.
 
@@ -867,7 +823,7 @@ This matches the directory name specified in PRE_DB_URI.
 $ mkdir qa_db
 ```
 
-### (7) Create Evaluation Table
+### (6) Create Evaluation Table
 
 Run this command. Then, use the sqlite3 command to see if the table was created.
 
@@ -1016,6 +972,62 @@ And then, send a request to the add_evaluation endpoint using the POST method. U
 ![POST add_evaluation](./images/s03_02_post_add_evaluation.png)
 
 If these three requests function correctly, you can verify that the backend server environment has been set up correctly. Once the backend server environment is established, you can proceed to configure the frontend server environment.
+
+
+### (3) Dynamic Testing
+
+This is an example of dynamic testing with pytest. It was set up mainly for regression testing when adding GoogleAI support after OpenAI. Keep in mind, it's not meant to fully cover everything.
+
+```
+$ pytest -v
+============================= test session starts ==============================
+platform linux -- Python 3.12.4, pytest-8.3.2, pluggy-1.5.0 -- (your-home)/.pyenv/versions/3.12.4/bin/python3.12
+cachedir: .pytest_cache
+rootdir: (your-dir)/quaet/backend
+configfile: pyproject.toml
+plugins: anyio-4.4.0
+collected 5 items                                                              
+
+tests/test_add_evaluation.py::test_add_evaluation PASSED                 [ 20%]
+tests/test_count_tokens.py::test_count_tokens PASSED                     [ 40%]
+tests/test_get_modellist.py::test_get_modellist PASSED                   [ 60%]
+tests/test_hello.py::test_hello PASSED                                   [ 80%]
+tests/test_multiturn_completion.py::test_multiturn_completion PASSED     [100%]
+
+============================== 5 passed in 2.23s ===============================
+$ 
+
+```
+
+Just to note, these tests weren’t specifically designed for coverage, but here are the coverage results. As you can see, the coverage for the three modules—pre_chat_completion.py, pre_count_tokens.py, and pre_multiturn_completion.py—is pretty low. pre_chat_completion.py was used in version 0.1.0 but hasn’t been used since version 0.2.0. The tests were written before GeminiAPI support was added in version 0.3.0. After adding GeminiAPI support, the two main modules that were modified were pre_count_tokens.py and pre_multiturn_completion.py, and since we didn’t create tests for these changes, this is clearly reflected in the coverage rates.
+
+```
+$ coverage report -m
+Name                                 Stmts   Miss  Cover   Missing
+------------------------------------------------------------------
+api/app.py                               4      1    75%   6
+api/app_factory.py                      86     19    78%   26, 31-43, 81-96
+api/pre_add_evaluation.py               68     17    75%   53, 61, 65, 87-101
+api/pre_chat_completion.py             110     72    35%   54-56, 62-185
+api/pre_count_tokens.py                 97     62    36%   7-8, 13-14, 21-22, 27-28, 33-34, 42, 55-64, 73, 75, 82-156
+api/pre_evaluation.py                   28      0   100%
+api/pre_get_modellist.py                27      5    81%   34-38
+api/pre_get_session.py                   7      0   100%
+api/pre_logger.py                       28      0   100%
+api/pre_model.py                        45      6    87%   21, 23, 34, 39, 50, 59
+api/pre_multiturn_completion.py        189     97    49%   13-14, 22, 25, 30-31, 43-44, 56-57, 62-63, 68-69, 77, 79-80, 85, 92-97, 101-105, 109-111, 119, 137, 141-146, 148, 153, 156-167, 177-179, 207, 217, 222, 229-329
+api/pre_openai_mock.py                  47      2    96%   21-22
+api/pre_response_errordata.py            5      0   100%
+tests/conftest.py                       12      0   100%
+tests/test_add_evaluation.py            31      4    87%   6-7, 12, 19
+tests/test_count_tokens.py              19      0   100%
+tests/test_get_modellist.py             12      0   100%
+tests/test_hello.py                      4      0   100%
+tests/test_multiturn_completion.py      19      0   100%
+------------------------------------------------------------------
+TOTAL                                  838    285    66%
+$ 
+```
 
 ## :hammer: Step-4: Setup Frontend
 

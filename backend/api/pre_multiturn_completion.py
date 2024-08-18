@@ -136,6 +136,7 @@ def multiturn_completion(
             deployment_name = model_def.deployment_name
 
         elif model_def.llm_service == "VertexAI":
+            logger.debug("-- [024] llm_service : VertexAI")
             project = os.environ.get("PRE_VERTEXAI_PROJECT_ID")
             if project is None:
                 raise Exception("PRE_VERTEXAI_PROJECT_ID not defined")
