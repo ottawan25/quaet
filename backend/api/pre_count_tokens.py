@@ -51,10 +51,15 @@ def count_tokens(
 
         # --- Count Tokens ---
         if model_def.llm_service == "OpenAI" or model_def.llm_service == "Azure":
-            encoding = tiktoken.encoding_for_model(model_def.deployment_name)
+            if "gpt" in model_def.deployment_name and "4o" in model_def.deployment_name:
+                logger.debug("-- [101] encoding: gpt-4o")
+                encoding = tiktoken.encoding_for_model("gpt-4o")
+            else:
+                logger.debug("-- [102] encoding: gpt-3.5-turbo")
+                encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
 
             system_content_tokens = len(encoding.encode(request_data.system_content))
-            logger.debug(f"-- [101] system_content tokens: {system_content_tokens}")
+            logger.debug(f"-- [106] system_content tokens: {system_content_tokens}")
 
             user_content_tokens = len(encoding.encode(request_data.user_content))
             logger.debug(f"-- [111] user_content tokens: {user_content_tokens}")
