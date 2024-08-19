@@ -22,7 +22,11 @@ from openai.types.chat import (
 )
 from pre_model import PreModel
 from pre_openai_mock import get_response
-from vertexai.generative_models import GenerationConfig, GenerativeModel  # type: ignore
+from vertexai.generative_models import (  # type: ignore
+    FinishReason,
+    GenerationConfig,
+    GenerativeModel,
+)
 
 QA_LOGFILE_EXTENSION = ".toml"
 
@@ -71,20 +75,34 @@ def get_current_datetime() -> str:
     return formatted_datetime
 
 
-def get_finish_reason(finish_reason: int) -> str:
+def get_finish_reason(finish_reason: int, llm_service: str) -> str:
     finish_reason_str = ""
-    if finish_reason == protos.Candidate.FinishReason.FINISH_REASON_UNSPECIFIED:
-        finish_reason_str = "unspecified"
-    elif finish_reason == protos.Candidate.FinishReason.STOP:
-        finish_reason_str = "stop"
-    elif finish_reason == protos.Candidate.FinishReason.MAX_TOKENS:
-        finish_reason_str = "max_tokens"
-    elif finish_reason == protos.Candidate.FinishReason.SAFETY:
-        finish_reason_str = "safety"
-    elif finish_reason == protos.Candidate.FinishReason.RECITATION:
-        finish_reason_str = "recitation"
-    else:
-        finish_reason_str = "other"
+    if llm_service == "GoogleAI":
+        if finish_reason == protos.Candidate.FinishReason.FINISH_REASON_UNSPECIFIED:
+            finish_reason_str = "unspecified"
+        elif finish_reason == protos.Candidate.FinishReason.STOP:
+            finish_reason_str = "stop"
+        elif finish_reason == protos.Candidate.FinishReason.MAX_TOKENS:
+            finish_reason_str = "max_tokens"
+        elif finish_reason == protos.Candidate.FinishReason.SAFETY:
+            finish_reason_str = "safety"
+        elif finish_reason == protos.Candidate.FinishReason.RECITATION:
+            finish_reason_str = "recitation"
+        else:
+            finish_reason_str = "other"
+    elif llm_service == "VertexAI":
+        if finish_reason == FinishReason.FINISH_REASON_UNSPECIFIED:
+            finish_reason_str = "unspecified"
+        elif finish_reason == FinishReason.STOP:
+            finish_reason_str = "stop"
+        elif finish_reason == FinishReason.MAX_TOKENS:
+            finish_reason_str = "max_tokens"
+        elif finish_reason == FinishReason.SAFETY:
+            finish_reason_str = "safety"
+        elif finish_reason == FinishReason.RECITATION:
+            finish_reason_str = "recitation"
+        else:
+            finish_reason_str = "other"
     return finish_reason_str
 
 
@@ -155,6 +173,7 @@ def multiturn_completion(
                 model_name=model_def.deployment_name,
                 system_instruction=request_data.system_content,
             )
+            deployment_name = model_def.deployment_name
 
         else:
             raise Exception("invalid llm_service")
@@ -270,16 +289,19 @@ def multiturn_completion(
                 response = model.generate_content(
                     contents=messages_google, generation_config=generation_config
                 )
+                logger.debug("-- [261] response (json format)")
+                logger.debug(response)
                 if response.usage_metadata is not None:
                     completion_tokens = response.usage_metadata.candidates_token_count
                     prompt_tokens = response.usage_metadata.prompt_token_count
                     total_tokens = response.usage_metadata.total_token_count
 
                 finish_reason = get_finish_reason(
-                    response.candidates[0].finish_reason  # type: ignore
+                    response.candidates[0].finish_reason,  # type: ignore
+                    model_def.llm_service,
                 )
                 assistant_content = response.candidates[0].content.parts[0].text
-                response_model = deployment_name
+                response_model = "N/A"
 
         # ----- Recording -----
         qa_log_dir = os.environ.get("PRE_QA_LOG_DIR")
@@ -297,7 +319,7 @@ def multiturn_completion(
                 "max_tokens": request_data.max_tokens,
                 "prompt_class": request_data.prompt_class,
             }
-        elif model_def.llm_service == "GoogleAI":
+        elif model_def.llm_service == "GoogleAI" or model_def.llm_service == "VertexAI":
             chat_completion_request = {
                 "qa_id": qa_id,
                 "current_datetime": current_datetime,
@@ -319,7 +341,7 @@ def multiturn_completion(
                 "total_tokens": total_tokens,
             }
             response_qa_log = {"qa_response": chat_completion_response}
-        elif model_def.llm_service == "GoogleAI":
+        elif model_def.llm_service == "GoogleAI" or model_def.llm_service == "VertexAI":
             chat_completion_response = {
                 "finish_reason": finish_reason,
                 "content": assistant_content,

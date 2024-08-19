@@ -828,7 +828,7 @@ $ mkdir qa_db
 Run this command. Then, use the sqlite3 command to see if the table was created.
 
 ```
-$ python pre_setup.py
+$ python api/pre_setup.py
 ...
 $ sqlite3 qa_db/qae.db
 SQLite version 3.37.2 2022-01-06 13:25:41

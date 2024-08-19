@@ -6,6 +6,7 @@ import google.generativeai as genai  # type: ignore
 import tiktoken  # type: ignore
 from flask import current_app
 from pre_model import PreModel
+from vertexai.generative_models import GenerativeModel  # type: ignore
 
 
 @dataclass
@@ -89,8 +90,14 @@ def count_tokens(
             )
             logger.debug(f"-- [171] total tokens: {total_tokens}")
 
-        elif model_def.llm_service == "GoogleAI":
-            model = genai.GenerativeModel(model_name=model_def.deployment_name)
+        elif model_def.llm_service == "GoogleAI" or model_def.llm_service == "VertexAI":
+            if model_def.llm_service == "GoogleAI":
+                model = genai.GenerativeModel(model_name=model_def.deployment_name)
+            elif model_def.llm_service == "VertexAI":
+                model = GenerativeModel(
+                    model_name=model_def.deployment_name,
+                    system_instruction=request_data.system_content,
+                )
 
             genai_system_tokens_obj = model.count_tokens(request_data.system_content)
             genai_system_tokens = genai_system_tokens_obj.total_tokens
