@@ -483,7 +483,7 @@ First, we’ll create a private key.
 ```
 $ cd (your-dir)/quaet
 $ cd keys
-$ openssl genpkey -out server.key -algorithm RSA -pkeyopt rsa_kgen_bits:2048
+$ openssl genpkey -out server.key -algorithm RSA -pkeyopt rsa_keygen_bits:2048
 ```
 This will generate a `"server.key"` file in the current directory with the private key.
 
@@ -497,7 +497,7 @@ Here's some key info to get you started:
 
 Here are some example commands. Make sure to follow the guidelines above and avoid copy-pasting them directly.
 ```
-$ openssl req -new -key server.key -out server.csr -addext "subctAltName=IP:192.168.10.104"
+$ openssl req -new -key server.key -out server.csr -addext "subjectAltName=IP:192.168.10.104"
 You are about to be asked to enter information that will be incporated
 into your certificate request.
 What you are about to enter is what is called a Distinguished Ne or a DN.
@@ -566,7 +566,7 @@ $ certutil -d sql:$HOME/.pki/nssdb -L
 Certificate Nickname                                         Trust Attributes
                                                              SSL,S/MIME,JAR/XPI
 
-qae                                                          P,,  
+quaet                                                          P,,  
 $ 
 ```
 
@@ -996,6 +996,24 @@ tests/test_multiturn_completion.py::test_multiturn_completion PASSED     [100%]
 
 ============================== 5 passed in 2.23s ===============================
 $ 
+
+$ coverage run -m pytest
+============================= test session starts ==============================
+platform linux -- Python 3.12.4, pytest-8.3.2, pluggy-1.5.0
+rootdir: /home/takashi/dev03/test27/quaet/backend
+configfile: pyproject.toml
+plugins: anyio-4.4.0
+collected 5 items                                                              
+
+tests/test_add_evaluation.py .                                           [ 20%]
+tests/test_count_tokens.py .                                             [ 40%]
+tests/test_get_modellist.py .                                            [ 60%]
+tests/test_hello.py .                                                    [ 80%]
+tests/test_multiturn_completion.py .                                     [100%]
+
+============================== 5 passed in 2.88s ===============================
+$ 
+
 
 ```
 
